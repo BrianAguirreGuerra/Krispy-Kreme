@@ -1,0 +1,369 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="KrispyKremeModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Cliente">
+          <Key>
+            <PropertyRef Name="IdCliente" />
+          </Key>
+          <Property Name="IdCliente" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="255" />
+          <Property Name="ApellidoPaterno" Type="varchar" MaxLength="255" />
+          <Property Name="ApellidoMaterno" Type="varchar" MaxLength="255" />
+        </EntityType>
+        <EntityType Name="Direccion">
+          <Key>
+            <PropertyRef Name="IdDireccion" />
+          </Key>
+          <Property Name="IdDireccion" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Calle" Type="varchar" MaxLength="255" />
+          <Property Name="NumExt" Type="varchar" MaxLength="10" />
+          <Property Name="NumInt" Type="varchar" MaxLength="10" />
+          <Property Name="Colonia" Type="varchar" MaxLength="255" />
+          <Property Name="Municipio" Type="varchar" MaxLength="255" />
+          <Property Name="Estado" Type="varchar" MaxLength="255" />
+          <Property Name="IdCliente" Type="int" />
+        </EntityType>
+        <EntityType Name="Dona">
+          <Key>
+            <PropertyRef Name="IdDona" />
+          </Key>
+          <Property Name="IdDona" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Nombre" Type="varchar" MaxLength="255" />
+          <Property Name="Precio" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="Detalles" Type="varchar(max)" />
+        </EntityType>
+        <EntityType Name="Venta">
+          <Key>
+            <PropertyRef Name="IdVenta" />
+          </Key>
+          <Property Name="IdVenta" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdCliente" Type="int" />
+          <Property Name="Total" Type="decimal" Precision="10" Scale="2" />
+          <Property Name="Fecha" Type="date" />
+        </EntityType>
+        <EntityType Name="VentaDona">
+          <Key>
+            <PropertyRef Name="IdVentaProducto" />
+          </Key>
+          <Property Name="IdVentaProducto" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="IdVenta" Type="int" />
+          <Property Name="IdDona" Type="int" />
+          <Property Name="Cantidad" Type="int" />
+        </EntityType>
+        <Association Name="FK__Direccion__IdCli__1FCDBCEB">
+          <End Role="Cliente" Type="Self.Cliente" Multiplicity="0..1" />
+          <End Role="Direccion" Type="Self.Direccion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cliente">
+              <PropertyRef Name="IdCliente" />
+            </Principal>
+            <Dependent Role="Direccion">
+              <PropertyRef Name="IdCliente" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__Venta__Fecha__239E4DCF">
+          <End Role="Cliente" Type="Self.Cliente" Multiplicity="0..1" />
+          <End Role="Venta" Type="Self.Venta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cliente">
+              <PropertyRef Name="IdCliente" />
+            </Principal>
+            <Dependent Role="Venta">
+              <PropertyRef Name="IdCliente" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__VentaDona__Canti__267ABA7A">
+          <End Role="Venta" Type="Self.Venta" Multiplicity="0..1" />
+          <End Role="VentaDona" Type="Self.VentaDona" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Venta">
+              <PropertyRef Name="IdVenta" />
+            </Principal>
+            <Dependent Role="VentaDona">
+              <PropertyRef Name="IdVenta" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__VentaDona__IdDon__276EDEB3">
+          <End Role="Dona" Type="Self.Dona" Multiplicity="0..1" />
+          <End Role="VentaDona" Type="Self.VentaDona" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dona">
+              <PropertyRef Name="IdDona" />
+            </Principal>
+            <Dependent Role="VentaDona">
+              <PropertyRef Name="IdDona" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Function Name="ClienteAdd" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdCliente" Type="int" Mode="InOut" />
+          <Parameter Name="Nombre" Type="varchar" Mode="In" />
+          <Parameter Name="ApellidoPaterno" Type="varchar" Mode="In" />
+          <Parameter Name="ApellidoMaterno" Type="varchar" Mode="In" />
+        </Function>
+        <Function Name="VentaAdd" Aggregate="false" BuiltIn="false" NiladicFunction="false" IsComposable="false" ParameterTypeSemantics="AllowImplicitConversion" Schema="dbo">
+          <Parameter Name="IdVenta" Type="int" Mode="InOut" />
+          <Parameter Name="IdCliente" Type="int" Mode="In" />
+          <Parameter Name="Total" Type="decimal" Mode="In" />
+          <Parameter Name="Fecha" Type="date" Mode="In" />
+        </Function>
+        <EntityContainer Name="KrispyKremeModelStoreContainer">
+          <EntitySet Name="Cliente" EntityType="Self.Cliente" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Direccion" EntityType="Self.Direccion" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Dona" EntityType="Self.Dona" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Venta" EntityType="Self.Venta" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="VentaDona" EntityType="Self.VentaDona" Schema="dbo" store:Type="Tables" />
+          <AssociationSet Name="FK__Direccion__IdCli__1FCDBCEB" Association="Self.FK__Direccion__IdCli__1FCDBCEB">
+            <End Role="Cliente" EntitySet="Cliente" />
+            <End Role="Direccion" EntitySet="Direccion" />
+          </AssociationSet>
+          <AssociationSet Name="FK__Venta__Fecha__239E4DCF" Association="Self.FK__Venta__Fecha__239E4DCF">
+            <End Role="Cliente" EntitySet="Cliente" />
+            <End Role="Venta" EntitySet="Venta" />
+          </AssociationSet>
+          <AssociationSet Name="FK__VentaDona__Canti__267ABA7A" Association="Self.FK__VentaDona__Canti__267ABA7A">
+            <End Role="Venta" EntitySet="Venta" />
+            <End Role="VentaDona" EntitySet="VentaDona" />
+          </AssociationSet>
+          <AssociationSet Name="FK__VentaDona__IdDon__276EDEB3" Association="Self.FK__VentaDona__IdDon__276EDEB3">
+            <End Role="Dona" EntitySet="Dona" />
+            <End Role="VentaDona" EntitySet="VentaDona" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="KrispyKremeModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="Dona">
+          <Key>
+            <PropertyRef Name="IdDona" />
+          </Key>
+          <Property Name="IdDona" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Precio" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="Detalles" Type="String" MaxLength="Max" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="VentaDonas" Relationship="KrispyKremeModel.FK__VentaDona__IdDon__276EDEB3" FromRole="Dona" ToRole="VentaDona" />
+        </EntityType>
+        <EntityContainer Name="KrispyKremeEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="Donas" EntityType="Self.Dona" />
+          <EntitySet Name="Clientes" EntityType="KrispyKremeModel.Cliente" />
+          <EntitySet Name="Direccions" EntityType="KrispyKremeModel.Direccion" />
+          <AssociationSet Name="FK__Direccion__IdCli__1FCDBCEB" Association="KrispyKremeModel.FK__Direccion__IdCli__1FCDBCEB">
+            <End Role="Cliente" EntitySet="Clientes" />
+            <End Role="Direccion" EntitySet="Direccions" />
+          </AssociationSet>
+          <FunctionImport Name="ClienteAdd">
+            <Parameter Name="IdCliente" Mode="InOut" Type="Int32" />
+            <Parameter Name="Nombre" Mode="In" Type="String" />
+            <Parameter Name="ApellidoPaterno" Mode="In" Type="String" />
+            <Parameter Name="ApellidoMaterno" Mode="In" Type="String" />
+          </FunctionImport>
+          <EntitySet Name="Ventas" EntityType="KrispyKremeModel.Venta" />
+          <EntitySet Name="VentaDonas" EntityType="KrispyKremeModel.VentaDona" />
+          <AssociationSet Name="FK__Venta__Fecha__239E4DCF" Association="KrispyKremeModel.FK__Venta__Fecha__239E4DCF">
+            <End Role="Cliente" EntitySet="Clientes" />
+            <End Role="Venta" EntitySet="Ventas" />
+          </AssociationSet>
+          <AssociationSet Name="FK__VentaDona__IdDon__276EDEB3" Association="KrispyKremeModel.FK__VentaDona__IdDon__276EDEB3">
+            <End Role="Dona" EntitySet="Donas" />
+            <End Role="VentaDona" EntitySet="VentaDonas" />
+          </AssociationSet>
+          <AssociationSet Name="FK__VentaDona__Canti__267ABA7A" Association="KrispyKremeModel.FK__VentaDona__Canti__267ABA7A">
+            <End Role="Venta" EntitySet="Ventas" />
+            <End Role="VentaDona" EntitySet="VentaDonas" />
+          </AssociationSet>
+          <FunctionImport Name="VentaAdd">
+            <Parameter Name="IdVenta" Mode="InOut" Type="Int32" />
+            <Parameter Name="IdCliente" Mode="In" Type="Int32" />
+            <Parameter Name="Total" Mode="In" Type="Decimal" />
+            <Parameter Name="Fecha" Mode="In" Type="DateTime" />
+          </FunctionImport>
+        </EntityContainer>
+        <EntityType Name="Cliente">
+          <Key>
+            <PropertyRef Name="IdCliente" />
+          </Key>
+          <Property Name="IdCliente" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Nombre" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="ApellidoPaterno" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="ApellidoMaterno" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <NavigationProperty Name="Direccions" Relationship="KrispyKremeModel.FK__Direccion__IdCli__1FCDBCEB" FromRole="Cliente" ToRole="Direccion" />
+          <NavigationProperty Name="Ventas" Relationship="KrispyKremeModel.FK__Venta__Fecha__239E4DCF" FromRole="Cliente" ToRole="Venta" />
+        </EntityType>
+        <EntityType Name="Direccion">
+          <Key>
+            <PropertyRef Name="IdDireccion" />
+          </Key>
+          <Property Name="IdDireccion" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Calle" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="NumExt" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="NumInt" Type="String" MaxLength="10" FixedLength="false" Unicode="false" />
+          <Property Name="Colonia" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Municipio" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="Estado" Type="String" MaxLength="255" FixedLength="false" Unicode="false" />
+          <Property Name="IdCliente" Type="Int32" />
+          <NavigationProperty Name="Cliente" Relationship="KrispyKremeModel.FK__Direccion__IdCli__1FCDBCEB" FromRole="Direccion" ToRole="Cliente" />
+        </EntityType>
+        <Association Name="FK__Direccion__IdCli__1FCDBCEB">
+          <End Type="KrispyKremeModel.Cliente" Role="Cliente" Multiplicity="0..1" />
+          <End Type="KrispyKremeModel.Direccion" Role="Direccion" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cliente">
+              <PropertyRef Name="IdCliente" />
+            </Principal>
+            <Dependent Role="Direccion">
+              <PropertyRef Name="IdCliente" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="Venta">
+          <Key>
+            <PropertyRef Name="IdVenta" />
+          </Key>
+          <Property Name="IdVenta" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdCliente" Type="Int32" />
+          <Property Name="Total" Type="Decimal" Precision="10" Scale="2" />
+          <Property Name="Fecha" Type="DateTime" Precision="0" />
+          <NavigationProperty Name="Cliente" Relationship="KrispyKremeModel.FK__Venta__Fecha__239E4DCF" FromRole="Venta" ToRole="Cliente" />
+          <NavigationProperty Name="VentaDonas" Relationship="KrispyKremeModel.FK__VentaDona__Canti__267ABA7A" FromRole="Venta" ToRole="VentaDona" />
+        </EntityType>
+        <EntityType Name="VentaDona">
+          <Key>
+            <PropertyRef Name="IdVentaProducto" />
+          </Key>
+          <Property Name="IdVentaProducto" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="IdVenta" Type="Int32" />
+          <Property Name="IdDona" Type="Int32" />
+          <Property Name="Cantidad" Type="Int32" />
+          <NavigationProperty Name="Dona" Relationship="KrispyKremeModel.FK__VentaDona__IdDon__276EDEB3" FromRole="VentaDona" ToRole="Dona" />
+          <NavigationProperty Name="Venta" Relationship="KrispyKremeModel.FK__VentaDona__Canti__267ABA7A" FromRole="VentaDona" ToRole="Venta" />
+        </EntityType>
+        <Association Name="FK__Venta__Fecha__239E4DCF">
+          <End Type="KrispyKremeModel.Cliente" Role="Cliente" Multiplicity="0..1" />
+          <End Type="KrispyKremeModel.Venta" Role="Venta" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Cliente">
+              <PropertyRef Name="IdCliente" />
+            </Principal>
+            <Dependent Role="Venta">
+              <PropertyRef Name="IdCliente" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__VentaDona__IdDon__276EDEB3">
+          <End Type="KrispyKremeModel.Dona" Role="Dona" Multiplicity="0..1" />
+          <End Type="KrispyKremeModel.VentaDona" Role="VentaDona" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Dona">
+              <PropertyRef Name="IdDona" />
+            </Principal>
+            <Dependent Role="VentaDona">
+              <PropertyRef Name="IdDona" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK__VentaDona__Canti__267ABA7A">
+          <End Type="KrispyKremeModel.Venta" Role="Venta" Multiplicity="0..1" />
+          <End Type="KrispyKremeModel.VentaDona" Role="VentaDona" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Venta">
+              <PropertyRef Name="IdVenta" />
+            </Principal>
+            <Dependent Role="VentaDona">
+              <PropertyRef Name="IdVenta" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="KrispyKremeModelStoreContainer" CdmEntityContainer="KrispyKremeEntities">
+          <EntitySetMapping Name="Donas">
+            <EntityTypeMapping TypeName="KrispyKremeModel.Dona">
+              <MappingFragment StoreEntitySet="Dona">
+                <ScalarProperty Name="IdDona" ColumnName="IdDona" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="Precio" ColumnName="Precio" />
+                <ScalarProperty Name="Detalles" ColumnName="Detalles" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Clientes">
+            <EntityTypeMapping TypeName="KrispyKremeModel.Cliente">
+              <MappingFragment StoreEntitySet="Cliente">
+                <ScalarProperty Name="ApellidoMaterno" ColumnName="ApellidoMaterno" />
+                <ScalarProperty Name="ApellidoPaterno" ColumnName="ApellidoPaterno" />
+                <ScalarProperty Name="Nombre" ColumnName="Nombre" />
+                <ScalarProperty Name="IdCliente" ColumnName="IdCliente" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Direccions">
+            <EntityTypeMapping TypeName="KrispyKremeModel.Direccion">
+              <MappingFragment StoreEntitySet="Direccion">
+                <ScalarProperty Name="IdCliente" ColumnName="IdCliente" />
+                <ScalarProperty Name="Estado" ColumnName="Estado" />
+                <ScalarProperty Name="Municipio" ColumnName="Municipio" />
+                <ScalarProperty Name="Colonia" ColumnName="Colonia" />
+                <ScalarProperty Name="NumInt" ColumnName="NumInt" />
+                <ScalarProperty Name="NumExt" ColumnName="NumExt" />
+                <ScalarProperty Name="Calle" ColumnName="Calle" />
+                <ScalarProperty Name="IdDireccion" ColumnName="IdDireccion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="ClienteAdd" FunctionName="KrispyKremeModel.Store.ClienteAdd" />
+          <EntitySetMapping Name="Ventas">
+            <EntityTypeMapping TypeName="KrispyKremeModel.Venta">
+              <MappingFragment StoreEntitySet="Venta">
+                <ScalarProperty Name="Fecha" ColumnName="Fecha" />
+                <ScalarProperty Name="Total" ColumnName="Total" />
+                <ScalarProperty Name="IdCliente" ColumnName="IdCliente" />
+                <ScalarProperty Name="IdVenta" ColumnName="IdVenta" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="VentaDonas">
+            <EntityTypeMapping TypeName="KrispyKremeModel.VentaDona">
+              <MappingFragment StoreEntitySet="VentaDona">
+                <ScalarProperty Name="Cantidad" ColumnName="Cantidad" />
+                <ScalarProperty Name="IdDona" ColumnName="IdDona" />
+                <ScalarProperty Name="IdVenta" ColumnName="IdVenta" />
+                <ScalarProperty Name="IdVentaProducto" ColumnName="IdVentaProducto" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <FunctionImportMapping FunctionImportName="VentaAdd" FunctionName="KrispyKremeModel.Store.VentaAdd" />
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

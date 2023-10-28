@@ -1,0 +1,45 @@
+﻿@model ML.Dona
+
+@{
+    ViewBag.Title = "Ventas";
+}
+
+<style>
+    /* Estilos personalizados para las tarjetas */
+    .custom-card {
+        margin: 10px; /* Agrega margen entre las tarjetas */
+        min-height: 200px; /* Altura mínima para todas las tarjetas */
+    }
+</style>
+
+<h2>Ventas</h2>
+
+@using (Html.BeginForm("Ventas", "Venta", FormMethod.Post))
+{
+    <div style="display: flex; align-items: center;">
+        <div style="margin-right: 10px;">
+            @Html.DropDownListFor(model => model.IdDona, new SelectList(Model.Donas, "IdDona", "Nombre"), "Elija una Dona", new { @class = "form-control" })
+        </div>
+        <button type="submit" class="btn btn-primary">Buscar</button>
+    </div>
+}
+
+@if (Model.Ventas != null && Model.Ventas.Count > 0)
+{
+    <h3>Resultados de ventas:</h3>
+    <div class="d-flex flex-row">
+        @foreach (var venta in Model.Ventas)
+        {
+            <div class="col-md-3 mb-3">
+                <div class="card custom-card">
+                    <div class="card-body">
+                        <h5 class="card-title">ID de Venta: @venta.IdVenta</h5>
+                        <p class="card-text">Fecha: @venta.Fecha.ToString("dd/MM/yyyy")</p>
+                        <p class="card-text">Total: $@venta.Total</p>
+                        <p class="card-text">Cliente: @venta.Clientes.Nombre @venta.Clientes.ApellidoPaterno @venta.Clientes.ApellidoMaterno</p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

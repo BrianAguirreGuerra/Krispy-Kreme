@@ -1,0 +1,299 @@
+﻿@model ML.Cliente
+
+<style>
+    .card {
+        height: 450px;
+    }
+
+    .donas-scroll {
+        max-height: 480px;
+        overflow-y: auto;
+    }
+
+    .resumen-compra-scroll {
+        max-height: 480px;
+        overflow-y: auto;
+    }
+
+    .card {
+        height: 450px;
+    }
+</style>
+
+
+<div class="row">
+    <div class="col-md-9 donas-scroll text-left">
+        <h2>Donas</h2>
+        <div class="row">
+            @foreach (var dona in Model.Dona.Donas)
+            {
+                <div class="col-md-6 mb-4">
+                    <div class="card">
+                        <img src="~/Img/Dona.jpg" class="card-img-top" alt="Dona">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <p class="card-text" style="font-size: 24px; color: red;">$@dona.Precio</p>
+                                <button class="btn btn-success" onclick="agregarDona('@dona.IdDona', '@dona.Nombre', @dona.Precio)">Agregar</button>
+                            </div>
+                            <h5 class a="card-title text-center">@dona.Nombre</h5>
+                            <p class="card-text text-center">@dona.Detalles</p>
+                            <input type="hidden" id="cantidad-@dona.IdDona" value="1" />
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+    <div class="col-md-3 resumen-compra-scroll">
+        <h2 style="text-align: center;">Resumen Compra</h2>
+        <ul id="resumen-compra"></ul>
+        <hr />
+        <div class="d-flex justify-content-between align-items-center">
+            <div id="total-compra" 1; text-align: right;">
+                Total: $0.00
+            </div>
+            <button class="btn btn-primary" onclick="realizarCompra()">Comprar</button>
+        </div>
+    </div>
+</div>
+
+<div class="modal modal-lg" id="FormCliente" tabindex="-2" aria-labelledby="exampleModalLabel">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Datos cliente</h5>
+            </div>
+            <div class="modal-body">
+                <div class="container-fluid">
+                    <form id="DatosCliente">
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <h3>Datos Personales</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="input-group mb-4">
+                                    <span class="input-group-text" id="basic-addon2"><i class="bi bi-pencil-fill"></i></span>
+                                    <input type="text" class="form-control" id="nombre" placeholder="Nombre" aria-label="Nombre" aria-describedby="basic-addon2" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="input-group mb-4">
+                                    <span class="input-group-text" id="basic-addon3"><i class="bi bi-pencil-fill"></i></span>
+                                    <input type="text" class="form-control" id="apellidoPaterno" placeholder="Apellido Paterno" aria-label="Apellido Paterno" aria-describedby="basic-addon3" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="input-group mb-4">
+                                    <span class="input-group-text" id="basic-addon4"><i class="bi bi-pencil-fill"></i></span>
+                                    <input type="text" class="form-control" id="apellidoMaterno" placeholder="Apellido Materno" aria-label="Apellido Materno" aria-describedby="basic-addon4" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12 text-center">
+                                <h3>Direccion</h3>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="input-group mb-4">
+                                    <span class="input-group-text" id="basic-addon1"><i class="bi bi-pencil-fill"></i></span>
+                                    <input type="text" class="form-control" id="calle" placeholder="Calle" aria-label="Calle" aria-describedby="basic-addon1" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="input-group mb-4">
+                                    <span class="input-group-text" id="basic-addon5"><i class="bi bi-pencil-fill"></i></span>
+                                    <input type="text" class="form-control" id="numeroExt" placeholder="N° Ext" aria-label="Número Ext" aria-describedby="basic-addon5" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="input-group mb-4">
+                                    <span class="input-group-text" id="basic-addon6"><i class="bi bi-pencil-fill"></i></span>
+                                    <input type="text" class="form-control" id="numeroInt" placeholder="N° Int" aria-label="Número Int" aria-describedby="basic-addon6" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="input-group mb-4">
+                                    <span class="input-group-text" id="basic-addon7"><i class="bi bi-pencil-fill"></i></span>
+                                    <input type="text" class="form-control" id="colonia" placeholder="Colonia" aria-label="Colonia" aria-describedby="basic-addon7" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="input-group mb-4">
+                                    <span class="input-group-text" id="basic-addon8"><i class="bi bi-pencil-fill"></i></span>
+                                    <input type="text" class="form-control" id="municipio" placeholder="Municipio" aria-label="Municipio" aria-describedby="basic-addon8" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="input-group mb-4">
+                                    <span class="input-group-text" id="basic-addon9"><i class="bi bi-pencil-fill"></i></span>
+                                    <input type="text" class="form-control" id="estado" placeholder="Estado" aria-label="Estado" aria-describedby="basic-addon9" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <input class="btn btn-success" type="button" value="Guardar" onclick="guardarDatos()" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('#FormCliente').modal({ backdrop: 'static', keyboard: false })
+        $('#FormCliente').modal('show');
+    });
+
+    function guardarDatos() {
+        const calle = document.getElementById("calle").value;
+        const nombre = document.getElementById("nombre").value;
+        const apellidoPaterno = document.getElementById("apellidoPaterno").value;
+        const apellidoMaterno = document.getElementById("apellidoMaterno").value;
+        const numeroExt = document.getElementById("numeroExt").value;
+        const numeroInt = document.getElementById("numeroInt").value;
+        const colonia = document.getElementById("colonia").value;
+        const municipio = document.getElementById("municipio").value;
+        const estado = document.getElementById("estado").value;
+
+        if (
+            calle.trim() === '' ||
+            nombre.trim() === '' ||
+            apellidoPaterno.trim() === '' ||
+            apellidoMaterno.trim() === '' ||
+            numeroExt.trim() === '' ||
+            numeroInt.trim() === '' ||
+            colonia.trim() === '' ||
+            municipio.trim() === '' ||
+            estado.trim() === ''
+        ) {
+            alert("Por favor, complete todos los campos.");
+        } else {
+            $('#FormCliente').modal('hide');
+        }
+    }
+
+    const camposSinNumeros = document.querySelectorAll('#nombre, #apellidoPaterno, #apellidoMaterno, #municipio, #estado');
+
+    camposSinNumeros.forEach(function (campo) {
+        campo.addEventListener('keypress', function (event) {
+            const charCode = event.charCode;
+            if (!/^[A-Za-zÁáÉéÍíÓóÚúÑñ\s]+$/.test(String.fromCharCode(charCode))) {
+                event.preventDefault();
+            }
+        });
+    });
+
+    const carrito = [];
+
+    function agregarDona(id, nombre, precio) {
+        const donaExistente = carrito.find(item => item.id === id);
+
+        if (donaExistente) {
+            donaExistente.cantidad += 1;
+        } else {
+            carrito.push({ id, nombre, precio, cantidad: 1 });
+        }
+
+        actualizarListaCompra();
+    }
+
+    function actualizarListaCompra() {
+        const listaCompra = document.getElementById("resumen-compra");
+        listaCompra.innerHTML = "";
+
+        carrito.forEach(item => {
+            const listItem = document.createElement("li");
+            listItem.innerHTML = `<b>${item.nombre}</b> - Precio: $${item.precio} - Cantidad:
+<input type="number" value="${item.cantidad}" min="0" oninput="actualizarCantidadEnInput('${item.id}', this.value)" style="max-width: 3em;" />`;
+            listaCompra.appendChild(listItem);
+        });
+
+        const totalCompra = document.getElementById("total-compra");
+        totalCompra.textContent = `Total: $${calcularTotalCompra().toFixed(2)}`;
+    }
+
+    function actualizarCantidadEnInput(id, nuevaCantidad) {
+        const donaExistente = carrito.find(item => item.id === id);
+        const cantidadAnterior = donaExistente.cantidad;
+        donaExistente.cantidad = parseInt(nuevaCantidad, 10);
+
+        if (donaExistente.cantidad <= 0) {
+            const confirmarEliminar = confirm("¿Desea eliminar esta dona?");
+            if (confirmarEliminar) {
+                const index = carrito.findIndex(item => item.id === id);
+                carrito.splice(index, 1); 
+            } else {
+                donaExistente.cantidad = 1; 
+            }
+        }
+
+        actualizarListaCompra();
+    }
+
+    function calcularTotalCompra() {
+        let total = 0;
+        carrito.forEach(item => {
+            total += item.cantidad * item.precio;
+        });
+        return total;
+    }
+
+    function realizarCompra() {
+        const cliente = {
+            Nombre: document.getElementById("nombre").value,
+            ApellidoPaterno: document.getElementById("apellidoPaterno").value,
+            ApellidoMaterno: document.getElementById("apellidoMaterno").value,
+        };
+
+        const direccion = {
+            Calle: document.getElementById("calle").value,
+            NumExt: document.getElementById("numeroExt").value,
+            NumInt: document.getElementById("numeroInt").value,
+            Colonia: document.getElementById("colonia").value,
+            Municipio: document.getElementById("municipio").value,
+            Estado: document.getElementById("estado").value,
+        };
+
+        const VentaDona = carrito.map(item => {
+            return {
+                IdDona: item.id,
+                Cantidad: item.cantidad
+            };
+        });
+
+
+        const totalVenta = calcularTotalCompra();
+
+        $.ajax({
+            type: "POST",
+            url: "/Cliente/Form",
+            data: {
+                Cliente: cliente,
+                Direccion: direccion,
+                VentaDona: VentaDona,
+                Total: totalVenta
+            },
+            success: function (data) {
+                if (data.Correct) {
+                    alert("Compra registrada correctamente. Gracias por su pedido.");
+                    location.reload();
+                    $('#FormCliente').modal('hide');
+                    $('#DatosCliente')[0].reset(); 
+                } else {
+                    alert("No se pudo registrar la compra. Error: " + data.Message);
+                }
+            },
+        });
+
+
+    }
+
+</script>
